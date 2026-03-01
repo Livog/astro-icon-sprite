@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.2](https://github.com/Livog/astro-icon-sprite/compare/v1.1.1...v1.1.2) (2026-03-01)
+
+
+### Bug Fixes
+
+* **docs:** include astroStacks in config example ([db9fe24](https://github.com/Livog/astro-icon-sprite/commit/db9fe24d0cead37e73db457e26da2be509731465))
+* move astro-stacks from peer to regular dependency ([782f745](https://github.com/Livog/astro-icon-sprite/commit/782f745684e1d0a2c27c7241292ee88f72e46ae0))
+* move astro-stacks from peer to regular dependency ([3ac5657](https://github.com/Livog/astro-icon-sprite/commit/3ac5657f4899f0cb7857d62686a8eee0ba87b84b))
+
 ## [1.1.1](https://github.com/Livog/astro-icon-sprite/compare/v1.1.0...v1.1.1) (2026-03-01)
 
 
