@@ -1,2 +1,3 @@
-export { iconSprite } from "./plugin.js";
-export type { IconPluginOptions } from "./plugin.js";
+export { iconSprite } from "./plugin";
+export type { IconPluginOptions } from "./plugin";
+export { default } from "./integration";

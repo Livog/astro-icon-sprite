@@ -12,7 +12,7 @@ The package has three parts:
 
 2. **`Icon.astro` component** -- Imports the registry, looks up an icon by name, and uses `stacks.pushOnce()` to add its `<symbol>` to the `iconSprite` stack. Renders an `<svg><use href="#id" /></svg>` reference in place.
 
-3. **`SpriteSheet.astro` component** -- Reads the `iconSprite` stack and emits all collected symbols inside a hidden SVG element. Only symbols for icons actually used on the page are included.
+3. **`IconSprite.astro` component** -- Reads the `iconSprite` stack and emits all collected symbols inside a hidden SVG element. Only symbols for icons actually used on the page are included.
 
 ## How It Works End-to-End
 
@@ -24,7 +24,7 @@ SVG files on disk                       <Icon name="search" />
   Vite plugin scans & compiles             imports registry,
        |                                  calls pushOnce("iconSprite", ...)
   virtual:icon-registry                          |
-  (JSON of all compiled symbols)         <SpriteSheet />
+  (JSON of all compiled symbols)         <IconSprite />
                                                  |
                                           reads stacks.get("iconSprite"),
                                           emits collected <symbol> elements
@@ -34,9 +34,15 @@ At build time, the Vite plugin reads SVG files from configured directories, stri
 
 At render time, when `<Icon name="search" />` is encountered, the component looks up `"search"` in the registry and calls `stacks.pushOnce("iconSprite", "icon-search", symbolMarkup)`. The `pushOnce` deduplication ensures each symbol appears only once, even if the same icon is used twenty times on a page.
 
-After `<slot />` renders, `<SpriteSheet />` reads the stack and emits all symbols inside a hidden `<svg>` element.
+After `<slot />` renders, `<IconSprite />` reads the stack and emits all symbols inside a hidden `<svg>` element.
 
 ## Installation
+
+```bash
+npx astro add astro-icon-sprite
+```
+
+Or manually:
 
 ```bash
 bun add astro-icon-sprite
@@ -48,25 +54,23 @@ Requires `astro-stacks` as a peer dependency. The stacks middleware must be conf
 
 ### 1. Astro Config
 
-Add the `iconSprite` plugin to your Vite config:
+Add the `astroIconSprite` integration to your Astro config:
 
 ```js
 // astro.config.mjs
 import { defineConfig } from "astro/config";
-import { iconSprite } from "astro-icon-sprite";
+import astroIconSprite from "astro-icon-sprite";
 
 export default defineConfig({
   output: "server",
-  vite: {
-    plugins: [
-      iconSprite({
-        local: "src/icons",
-        resolve: {
-          lu: "lucide-static/icons",
-        },
-      }),
-    ],
-  },
+  integrations: [
+    astroIconSprite({
+      local: "src/icons",
+      resolve: {
+        lu: "lucide-static/icons",
+      },
+    }),
+  ],
 });
 ```
 
@@ -95,12 +99,12 @@ declare module "virtual:icon-registry" {
 
 ### 3. Layout
 
-Place `<SpriteSheet />` after `<slot />` in your layout, alongside any `StackOutput` components:
+Place `<IconSprite />` after `<slot />` in your layout, inside a `<Stack>` component:
 
 ```astro
 ---
-import StackOutput from "astro-stacks/stack-output.astro";
-import SpriteSheet from "astro-icon-sprite/sprite-sheet.astro";
+import Stack from "astro-stacks/stack.astro";
+import IconSprite from "astro-icon-sprite/icon-sprite.astro";
 ---
 
 <!doctype html>
@@ -109,18 +113,18 @@ import SpriteSheet from "astro-icon-sprite/sprite-sheet.astro";
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>My Site</title>
-    <!--@stack(head)-->
+    <Stack name="head" />
   </head>
   <body>
     <slot />
 
-    <SpriteSheet />
-    <StackOutput name="beforeBodyEnd" />
+    <IconSprite />
+    <Stack name="beforeBodyEnd" />
   </body>
 </html>
 ```
 
-`SpriteSheet` must come after `<slot />` because it relies on the stacks store being populated by `Icon` components that rendered inside the slot.
+`IconSprite` must come after `<slot />` because it relies on the stacks store being populated by `Icon` components that rendered inside the slot.
 
 ### 4. Use Icons
 
@@ -158,7 +162,7 @@ src/icons/
 Maps prefixes to directories. Icons from resolved directories use the `prefix:name` naming convention.
 
 ```js
-iconSprite({
+astroIconSprite({
   resolve: {
     lu: "lucide-static/icons",       // node_modules path (tree-shaken)
     heroicons: "src/heroicons",      // local path (all included)
@@ -224,12 +228,12 @@ The `Icon` component accepts all standard SVG attributes in addition to `name`. 
 
 In dev mode, a console warning is emitted if the icon name is not found in the registry.
 
-## SpriteSheet Component
+## IconSprite Component
 
 Renders all collected icon symbols as a hidden inline SVG. Takes no props.
 
 ```astro
-<SpriteSheet />
+<IconSprite />
 ```
 
 The rendered output (when icons have been used on the page):
@@ -257,6 +261,6 @@ Icon names are converted to sprite IDs with the prefix `icon-` and colons replac
 
 | Export Path | Contents |
 |---|---|
-| `astro-icon-sprite` | `iconSprite` plugin, `IconPluginOptions` type |
+| `astro-icon-sprite` | `astroIconSprite` integration (default), `iconSprite` plugin, `IconPluginOptions` type |
 | `astro-icon-sprite/icon.astro` | `Icon` component |
-| `astro-icon-sprite/sprite-sheet.astro` | `SpriteSheet` component |
+| `astro-icon-sprite/icon-sprite.astro` | `IconSprite` component |
