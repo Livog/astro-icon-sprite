@@ -59,11 +59,13 @@ Add the `astroIconSprite` integration to your Astro config:
 ```js
 // astro.config.mjs
 import { defineConfig } from "astro/config";
+import astroStacks from "astro-stacks";
 import astroIconSprite from "astro-icon-sprite";
 
 export default defineConfig({
   output: "server",
   integrations: [
+    astroStacks(),
     astroIconSprite({
       local: "src/icons",
       resolve: {
