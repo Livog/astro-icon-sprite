@@ -28,11 +28,11 @@ const SVG_TAG_EXCLUDE = new Set([
 ]);
 const SVG_ATTR_RE = /\b([\w:-]+)\s*=\s*["']([^"']*)["']/g;
 
-function isLocalPath(dir: string): boolean {
+export function isLocalPath(dir: string): boolean {
   return /^(\.{0,2}\/|src\/)/.test(dir);
 }
 
-function resolveDir(root: string, dir: string): string {
+export function resolveDir(root: string, dir: string): string {
   if (isLocalPath(dir)) return path.resolve(root, dir);
   return path.resolve(root, "node_modules", dir);
 }

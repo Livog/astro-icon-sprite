@@ -34,12 +34,14 @@
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "tsc && cp src/*.astro dist/",
+    "build": "tsup && cp src/*.astro dist/",
     "clean": "rm -rf dist"
   },
   "devDependencies": {
     "@types/node": "^25.3.3",
     "astro": "^5.0.0",
+    "astro-stacks": "file:../astro-stacks",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
   },

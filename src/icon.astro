@@ -1,8 +1,9 @@
 ---
+import type { IconName } from "astro-icon-sprite";
 import registry from "virtual:icon-registry";
 
 interface Props extends astroHTML.JSX.SVGAttributes {
-  name: string;
+  name: IconName;
 }
 
 const { name, ...attrs } = Astro.props;
