@@ -1,9 +1,16 @@
 {
   "name": "astro-icon-sprite",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "Build-time SVG sprite sheet compilation for Astro, powered by astro-stacks",
-  "keywords": ["astro", "svg", "icons", "sprite", "vite-plugin", "astro-integration"],
+  "keywords": [
+    "astro",
+    "svg",
+    "icons",
+    "sprite",
+    "vite-plugin",
+    "astro-integration"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -21,7 +28,9 @@
     "./icon.astro": "./dist/icon.astro",
     "./icon-sprite.astro": "./dist/icon-sprite.astro"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "scripts": {
