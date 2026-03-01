@@ -37,21 +37,17 @@
     "build": "tsup && cp src/*.astro dist/",
     "clean": "rm -rf dist"
   },
+  "dependencies": {
+    "astro-stacks": ">=0.1.0"
+  },
   "devDependencies": {
     "@types/node": "^25.3.3",
     "astro": "^5.0.0",
-    "astro-stacks": ">=0.1.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
   },
   "peerDependencies": {
-    "astro": ">=4.0.0",
-    "astro-stacks": ">=0.1.0"
-  },
-  "peerDependenciesMeta": {
-    "astro-stacks": {
-      "optional": true
-    }
+    "astro": ">=4.0.0"
   }
 }

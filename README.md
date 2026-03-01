@@ -48,7 +48,7 @@ Or manually:
 bun add astro-icon-sprite
 ```
 
-Requires `astro-stacks` as a peer dependency. The stacks middleware must be configured (see [astro-stacks README](../astro-stacks/README.md)).
+`astro-stacks` is installed automatically as a dependency. See the [astro-stacks README](../astro-stacks/README.md) for middleware setup.
 
 ## Setup
 
