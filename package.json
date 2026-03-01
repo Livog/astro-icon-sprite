@@ -38,7 +38,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "astro-stacks": ">=0.1.0"
+    "astro-stacks": ">=1.0.0"
   },
   "devDependencies": {
     "@types/node": "^25.3.3",
