@@ -1,0 +1,18 @@
+---
+import registry from "virtual:icon-registry";
+
+interface Props extends astroHTML.JSX.SVGAttributes {
+  name: string;
+}
+
+const { name, ...attrs } = Astro.props;
+const icon = registry[name];
+
+if (icon) {
+  Astro.locals.stacks.pushOnce("iconSprite", icon.spriteId, icon.symbol);
+} else if (import.meta.env.DEV) {
+  console.warn(`[Icon] Unknown icon name: "${name}"`);
+}
+---
+
+{icon && <svg viewBox={icon.viewBox} {...attrs}><use href={`#${icon.spriteId}`} /></svg>}
