@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/Livog/astro-icon-sprite/compare/v1.1.0...v1.1.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* use actual hasStacks value in dev type regeneration ([d878fc0](https://github.com/Livog/astro-icon-sprite/commit/d878fc03239b2d3c33c20902f2ed9435eb505d96))
+
 ## [1.1.0](https://github.com/Livog/astro-icon-sprite/compare/v1.0.0...v1.1.0) (2026-03-01)
 
 
