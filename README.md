@@ -74,32 +74,9 @@ export default defineConfig({
 });
 ```
 
-### 2. Type Declarations
+### 2. Layout
 
-Add the virtual module declaration alongside your stacks types:
-
-```ts
-// src/env.d.ts
-/// <reference types="astro/client" />
-
-declare namespace App {
-  interface Locals {
-    stacks: import("astro-stacks").StackStore;
-  }
-}
-
-declare module "virtual:icon-registry" {
-  const registry: Record<
-    string,
-    { spriteId: string; viewBox: string; symbol: string }
-  >;
-  export default registry;
-}
-```
-
-### 3. Layout
-
-Place `<IconSprite />` after `<slot />` in your layout, inside a `<Stack>` component:
+Place `<IconSprite />` after `<slot />` in your layout:
 
 ```astro
 ---
@@ -126,7 +103,7 @@ import IconSprite from "astro-icon-sprite/icon-sprite.astro";
 
 `IconSprite` must come after `<slot />` because it relies on the stacks store being populated by `Icon` components that rendered inside the slot.
 
-### 4. Use Icons
+### 3. Use Icons
 
 ```astro
 ---
@@ -185,7 +162,7 @@ astroIconSprite({
 
 For `node_modules` icon libraries (non-local paths in `resolve`), the plugin scans your source files to find which `prefix:name` patterns are actually used. Only those icons are compiled and bundled.
 
-This means you can install a library with 1000+ icons and only the ones you reference in your `.astro`, `.tsx`, `.jsx`, `.ts`, `.js`, `.svelte`, `.vue`, `.html`, or `.mdx` files will be included in the build.
+This means you can install a library with 1000+ icons and only the ones you reference in your `.astro`, `.tsx`, `.jsx`, `.ts`, `.js`, `.svelte`, `.vue`, `.html`, `.md`, or `.mdx` files will be included in the build.
 
 The scan uses `git ls-files` when available for speed, falling back to a filesystem walk that skips `node_modules`, `dist`, and dotfile directories.
 
@@ -202,7 +179,7 @@ All SVGs are sanitized at build time for security. The following are stripped:
 - Inline event handlers (`onclick`, `onload`, etc.)
 - `javascript:` and `data:` URIs in `href` / `xlink:href` attributes
 
-The `viewBox` attribute is preserved (defaulting to `0 0 24 24` if absent). Attributes like `xmlns`, `width`, `height`, `class`, `style`, and `id` are stripped from the root `<svg>` element since the symbol wrapper provides its own.
+The `viewBox` attribute is preserved (defaulting to `0 0 24 24` if absent). Attributes like `xmlns`, `xmlns:xlink`, `version`, `width`, `height`, `class`, `style`, `id`, `x`, and `y` are stripped from the root `<svg>` element since the symbol wrapper provides its own.
 
 ## HMR (Dev Mode)
 
@@ -211,6 +188,16 @@ In development, the plugin watches SVG directories for changes:
 - **Local directories** and **local resolved directories** are watched via the Vite dev server's file watcher.
 - Adding, modifying, or deleting an SVG triggers a debounced rebuild (200ms) and a full page reload.
 - New `prefix:name` references found in source files during transforms are compiled on-the-fly without a full rebuild.
+
+## Type Safety
+
+The integration uses Astro's `injectTypes()` API to auto-generate type declarations. No manual `env.d.ts` setup is needed — run `astro sync` (or start the dev server) and you get:
+
+- **`virtual:icon-registry`** module declaration
+- **`IconNames`** interface augmented with every discovered icon name, giving you autocomplete on the `name` prop
+- **`StackNames`** interface augmented with `"iconSprite"` (when `astro-stacks` is present)
+
+In dev mode, the generated types are also kept in sync when SVG files are added or removed.
 
 ## Icon Component API
 
@@ -223,7 +210,7 @@ The `Icon` component accepts all standard SVG attributes in addition to `name`. 
 
 | Prop | Type | Description |
 |------|------|-------------|
-| `name` | `string` | Icon name (e.g. `"search"` or `"lu:house"`) |
+| `name` | `IconName` | Icon name with autocomplete (e.g. `"search"` or `"lu:house"`) |
 | `...attrs` | SVG attributes | Any valid SVG attribute (`class`, `style`, `aria-label`, etc.) |
 
 In dev mode, a console warning is emitted if the icon name is not found in the registry.
@@ -249,7 +236,7 @@ If no icons were used on the page, nothing is rendered.
 
 ## Sprite ID Format
 
-Icon names are converted to sprite IDs with the prefix `icon-` and colons replaced by `--`:
+Icon names are converted to sprite IDs with the prefix `icon-`, colons replaced by `--`, and any remaining characters outside `[a-zA-Z0-9_-]` stripped:
 
 | Icon name | Sprite ID |
 |-----------|-----------|
@@ -261,6 +248,6 @@ Icon names are converted to sprite IDs with the prefix `icon-` and colons replac
 
 | Export Path | Contents |
 |---|---|
-| `astro-icon-sprite` | `astroIconSprite` integration (default), `iconSprite` plugin, `IconPluginOptions` type |
+| `astro-icon-sprite` | `astroIconSprite` integration (default), `iconSprite` plugin, `IconPluginOptions`, `IconNames`, `IconName` types |
 | `astro-icon-sprite/icon.astro` | `Icon` component |
 | `astro-icon-sprite/icon-sprite.astro` | `IconSprite` component |

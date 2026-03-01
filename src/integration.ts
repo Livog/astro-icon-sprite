@@ -79,6 +79,7 @@ export default function astroIconSprite(
   let dtsPath: string | undefined;
   let projectRoot: string | undefined;
   let lastSerialized: string | undefined;
+  let hasStacks = false;
 
   return {
     name: "astro-icon-sprite",
@@ -118,7 +119,6 @@ export default function astroIconSprite(
                       const serialized = [...names].sort().join(",");
                       if (serialized === lastSerialized) return;
                       lastSerialized = serialized;
-                      const hasStacks = true;
                       await writeFile(
                         dtsPath!,
                         generateIconDts(names, hasStacks),
@@ -140,7 +140,7 @@ export default function astroIconSprite(
 
       "astro:config:done": ({ config, injectTypes }) => {
         projectRoot = fileURLToPath(config.root);
-        const hasStacks = config.integrations.some(
+        hasStacks = config.integrations.some(
           (i: any) => i.name === STACKS_INTEGRATION_NAME,
         );
 
